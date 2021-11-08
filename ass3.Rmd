@@ -33,8 +33,6 @@ options(scipen = 333)
 # Spørsmål 3
 
 *ddf--entities--geo--un_sdg_region.csv* beskriver hvilke områder som er anerkjent som FN-regioner.
->>>>>>> c590b3267979ab674d55047bd666cfb6931a48ff
- 
 
 ```{r}
 library(readr)
