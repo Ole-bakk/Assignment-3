@@ -25,27 +25,13 @@ options(scipen = 333)
 
 # Spørsmål 2
 
-<<<<<<< HEAD
 *ddf--entities--geo--country.csv* inneholder kort beskrivelse av alle verdens land og stater. Dette inkluderer informasjon som beskriver hvorvidt landet er anerkjent som et land eller ikke. I tillegg ser vi blant annet også hvilken region/verdensdel det tilhører, levestandard, FN-tilhørighet og lokasjon
-=======
+
 *ddf--entities--geo--country.csv*  henviser til en kort beskrivelse av alle verdens land og stater. Samtidig som  informasjon om landet er anerkjent som et land eller ikke. Beskrivelsen innholder også geografisk lokasjon verdensdel/region, FN-tilhørighet og antatt levestandard. 
->>>>>>> c590b3267979ab674d55047bd666cfb6931a48ff
+
 
 # Spørsmål 3
 
-<<<<<<< HEAD
-# Spørsmål 4
-
-Gapminder datasettet fra gapminder pakken inneholder 6 variabler. disse er:
- - *country* -> land, med 142 leveler.
- - *continent* -> kontinenter, med 5 leveler.
- - *year* -> år, varier fra 1952 til 2007 i trinn på 5 år
- - *lifeExp* -> forventet leveår, målt i år.
- - *pop* -> befolkning
- - *gdpPercap* -> BNP per innbygger, US$ inflasjon-justert
- 
- 
-=======
 *ddf--entities--geo--un_sdg_region.csv* beskriver hvilke områder som er anerkjent som FN-regioner.
 >>>>>>> c590b3267979ab674d55047bd666cfb6931a48ff
  
@@ -57,10 +43,14 @@ print(g_c)
 ```
 
 
-<<<<<<< HEAD
-=======
+# Spørsmål 4
 
-
->>>>>>> c590b3267979ab674d55047bd666cfb6931a48ff
-
+Gapminder datasettet fra gapminder pakken inneholder 6 variabler. disse er:
+ - *country* -> land, med 142 leveler.
+ - *continent* -> kontinenter, med 5 leveler.
+ - *year* -> år, varier fra 1952 til 2007 i trinn på 5 år
+ - *lifeExp* -> forventet leveår, målt i år.
+ - *pop* -> befolkning
+ - *gdpPercap* -> BNP per innbygger, US$ inflasjon-justert
+ 
 
