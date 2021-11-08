@@ -1,11 +1,13 @@
 ---
 title: "Gapminder; Assignment 3"
-Subtitle: Ole Alexander Bakkevik & Sindre M. Espedal
+subtitle: "MSB - 105"
+author: "Ole Alexander Bakkevik & Sindre M. Espedal"
 output:
   pdf_document: default
   html_notebook: default
 ---
 
+<<<<<<< HEAD
 ```{r setup, message=FALSE, echo=FALSE}
 library(tibble)
 library(readr)
@@ -24,6 +26,16 @@ options(scipen = 999)
 # Spørsmål 2
 
 *ddf--entities--geo--country.csv* inneholder kort beskrivelse av alle verdens land og stater. Dette inkluderer informasjon som beskriver hvorvidt landet er anerkjent som et land eller ikke. I tillegg ser vi blant annet også hvilken region/verdensdel det tilhører, levestandard, FN-tilhørighet og lokasjon
+=======
+## 1
+
+
+## 2
+
+
+
+
+>>>>>>> 2582f43b551c1523ded77019b43deeddccd46b1e
 
 
 
