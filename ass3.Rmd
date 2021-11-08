@@ -29,10 +29,14 @@ options(scipen = 333)
 
 # Spørsmål 3
 
-
-*ddf--entities--geo--un_sdg_region.csv* beskriver om hvilke områder som er anerkjent som FN-regioner.
+*ddf--entities--geo--un_sdg_region.csv* beskriver hvilke områder som er anerkjent som FN-regioner.
  
 
+```{r}
+library(readr)
+g_c <- read_csv("ddf--gapminder--systema_globalis-master/ddf--entities--geo--country.csv")
+print(g_c)
+```
 
 
 
