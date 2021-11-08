@@ -14,6 +14,7 @@ library(readr)
 library(knitr)
 library(dplyr)
 library(tidyverse)
+library(tinytex)
 options(scipen = 999)
 ```
 
@@ -25,17 +26,14 @@ options(scipen = 999)
 
 # Spørsmål 2
 
-*ddf--entities--geo--country.csv* inneholder kort beskrivelse av alle verdens land og stater. Dette inkluderer informasjon som beskriver hvorvidt landet er anerkjent som et land eller ikke. I tillegg ser vi blant annet også hvilken region/verdensdel det tilhører, levestandard, FN-tilhørighet og lokasjon
-=======
-## 1
+*ddf--entities--geo--country.csv*  henviser til en kort beskrivelse av alle verdens land og stater. Samtidig som  informasjon om landet er anerkjent som et land eller ikke. Beskrivelsen innholder også geografisk lokasjon verdensdel/region, FN-tilhørighet og antatt levestandard. 
 
+# Spørsmål 3
+ 
 
 ## 2
 
 
-
-
->>>>>>> 2582f43b551c1523ded77019b43deeddccd46b1e
 
 
 
