@@ -7,7 +7,6 @@ output:
   html_notebook: default
 ---
 
-<<<<<<< HEAD
 ```{r setup, message=FALSE, echo=FALSE}
 library(tibble)
 library(readr)
@@ -26,16 +25,21 @@ options(scipen = 999)
 # Spørsmål 2
 
 *ddf--entities--geo--country.csv* inneholder kort beskrivelse av alle verdens land og stater. Dette inkluderer informasjon som beskriver hvorvidt landet er anerkjent som et land eller ikke. I tillegg ser vi blant annet også hvilken region/verdensdel det tilhører, levestandard, FN-tilhørighet og lokasjon
-=======
-## 1
 
 
-## 2
+# Spørsmål 4
 
+Gapminder datasettet fra gapminder pakken inneholder 6 variabler. disse er:
+ - *country* -> land, med 142 leveler.
+ - *continent* -> kontinenter, med 5 leveler.
+ - *year* -> år, varier fra 1952 til 2007 i trinn på 5 år
+ - *lifeExp* -> forventet leveår, målt i år.
+ - *pop* -> befolkning
+ - *gdpPercap* -> BNP per innbygger, US$ inflasjon-justert
+ 
+ 
+ 
 
-
-
->>>>>>> 2582f43b551c1523ded77019b43deeddccd46b1e
 
 
 
