@@ -7,7 +7,6 @@ output:
   html_notebook: default
 ---
 
-<<<<<<< HEAD
 ```{r setup, message=FALSE, echo=FALSE}
 library(tibble)
 library(readr)
@@ -15,7 +14,7 @@ library(knitr)
 library(dplyr)
 library(tidyverse)
 library(tinytex)
-options(scipen = 999)
+options(scipen = 333)
 ```
 
 
@@ -29,9 +28,11 @@ options(scipen = 999)
 *ddf--entities--geo--country.csv*  henviser til en kort beskrivelse av alle verdens land og stater. Samtidig som  informasjon om landet er anerkjent som et land eller ikke. Beskrivelsen innholder også geografisk lokasjon verdensdel/region, FN-tilhørighet og antatt levestandard. 
 
 # Spørsmål 3
+
+
+*ddf--entities--geo--un_sdg_region.csv* beskriver om hvilke områder som er anerkjent som FN-regioner.
  
 
-## 2
 
 
 
