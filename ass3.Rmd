@@ -13,7 +13,8 @@ library(readr)
 library(knitr)
 library(dplyr)
 library(tidyverse)
-options(scipen = 999)
+library(tinytex)
+options(scipen = 333)
 ```
 
 
@@ -24,9 +25,15 @@ options(scipen = 999)
 
 # Spørsmål 2
 
+<<<<<<< HEAD
 *ddf--entities--geo--country.csv* inneholder kort beskrivelse av alle verdens land og stater. Dette inkluderer informasjon som beskriver hvorvidt landet er anerkjent som et land eller ikke. I tillegg ser vi blant annet også hvilken region/verdensdel det tilhører, levestandard, FN-tilhørighet og lokasjon
+=======
+*ddf--entities--geo--country.csv*  henviser til en kort beskrivelse av alle verdens land og stater. Samtidig som  informasjon om landet er anerkjent som et land eller ikke. Beskrivelsen innholder også geografisk lokasjon verdensdel/region, FN-tilhørighet og antatt levestandard. 
+>>>>>>> c590b3267979ab674d55047bd666cfb6931a48ff
 
+# Spørsmål 3
 
+<<<<<<< HEAD
 # Spørsmål 4
 
 Gapminder datasettet fra gapminder pakken inneholder 6 variabler. disse er:
@@ -38,9 +45,22 @@ Gapminder datasettet fra gapminder pakken inneholder 6 variabler. disse er:
  - *gdpPercap* -> BNP per innbygger, US$ inflasjon-justert
  
  
+=======
+*ddf--entities--geo--un_sdg_region.csv* beskriver hvilke områder som er anerkjent som FN-regioner.
+>>>>>>> c590b3267979ab674d55047bd666cfb6931a48ff
  
 
+```{r}
+library(readr)
+g_c <- read_csv("ddf--gapminder--systema_globalis-master/ddf--entities--geo--country.csv")
+print(g_c)
+```
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> c590b3267979ab674d55047bd666cfb6931a48ff
 
 
