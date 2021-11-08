@@ -1,11 +1,14 @@
 ---
 title: "Gapminder; Assignment 3"
-Subtitle: Ole Alexander Bakkevik & Sindre M. Espedal
+subtitle: "MSB - 105"
+author: "Ole Alexander Bakkevik & Sindre M. Espedal"
 output:
   pdf_document: default
   html_notebook: default
 ---
 # Spørsmål
+
+## 1
 
 
 
