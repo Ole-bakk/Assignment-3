@@ -5,7 +5,11 @@ output:
   pdf_document: default
   html_notebook: default
 ---
-# Spørsmål
+# Spørsmål 1
+
+*ddf--concepts.csv* filen er en tekstfil uten verdier. Innholdet er beskrivelser av forskjellige variabler. Som for eksempel populasjonsforhold, dødsårsaker, sykdommer (HIV, tuberkulose), arbeidsledighet og yrkesaktive, aldersgrupper. Det er også beskrevet de respektive landenes mikro/makroøkonimiske forhold  som BNP osv.
+
+
 
 
 
