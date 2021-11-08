@@ -5,12 +5,25 @@ output:
   pdf_document: default
   html_notebook: default
 ---
+
+```{r setup, message=FALSE, echo=FALSE}
+library(tibble)
+library(readr)
+library(knitr)
+library(dplyr)
+library(tidyverse)
+options(scipen = 999)
+```
+
+
 # Spørsmål 1
 
 *ddf--concepts.csv* filen er en tekstfil uten verdier. Innholdet er beskrivelser av forskjellige variabler. Som for eksempel populasjonsforhold, dødsårsaker, sykdommer (HIV, tuberkulose), arbeidsledighet og yrkesaktive, aldersgrupper. Det er også beskrevet de respektive landenes mikro/makroøkonimiske forhold  som BNP osv.
 
 
+# Spørsmål 2
 
+*ddf--entities--geo--country.csv* inneholder kort beskrivelse av alle verdens land og stater. Dette inkluderer informasjon som beskriver hvorvidt landet er anerkjent som et land eller ikke. I tillegg ser vi blant annet også hvilken region/verdensdel det tilhører, levestandard, FN-tilhørighet og lokasjon
 
 
 
