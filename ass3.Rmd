@@ -48,6 +48,7 @@ g_c <- read_csv("ddf--gapminder--systema_globalis-master/ddf--entities--geo--cou
 print(g_c)
 ```
 
+
 # Spørsmål 4
 
 Gapminder datasettet fra gapminder pakken inneholder 6 variabler. disse
@@ -69,7 +70,9 @@ oppg_4 <- ddf_entities_geo_country <- read_csv("ddf--gapminder--systema_globalis
 Vi ser ut i fra datasettet *ddf:entities_geo_country.csv* at Australia
 og New Zealand tilhører *east_asia_pacific*, altså Asia.
 
+
 # Spørsmål 5
+
 ```{r}
 g_c <- g_c %>%
   mutate(continent = case_when(
@@ -83,8 +86,8 @@ g_c <- g_c %>%
 ```
 
 
-
 # Spørsmål 6
+
 ## a)
 
 ```{r}
@@ -93,6 +96,7 @@ length(unique(g_c$country))
 Nå er det 247 land. 
 
 # Spørsmål 6
+
 ## b)
 
 ```{r}
@@ -150,75 +154,92 @@ names(g_c)
 # Spørsmål 10
 
 ```{r}
-pop <- read_csv("ddf--gapminder--systema_globalis-master/ddf--entities--geo--country/countries-etc-datapoints/ddf--datapoints--population_total--by--geo--time.csv", 
-    col_types = cols(time = col_date(format = "%Y")))
-
+g_c_min <- g_c %>% 
+  group_by(country) %>% 
+  summarise(min_year = min(year))
+table(g_c_min$min_year)
 ```
 
-```{r}
-g_c <- g_c %>%
-  left_join(pop, by = c("country" = "geo", "year" = "time"))
-
-rm(pop)
-```
+Fra 1800 er det 186 land som har forventet levealder, mens de resterende 9 andre landene har fra 1950.
 
 
 # Spørsmål 11
 
-```{r u_pop}
-u_pop <- read_csv("Data/ddf--gapminder--systema_globalis-master/countries-etc-datapoints/ddf--datapoints--urban_population--by--geo--time.csv", 
-    col_types = cols(time = col_date(format = "%Y")))
+```{r}
+g_c_min <- g_c_min %>%
+  left_join(g_c,
+            by = "country") %>%
+  filter(min_year == "1950-01-01")
+tibble(country = unique(g_c_min$name))
+rm(g_c_min)
 ```
 
-```{r join_u_pop}
-g_c <- g_c %>%
-  left_join(u_pop, by = c("country" = "geo", "year" = "time"))
+Dette er de 9 landene som har data om forventet levealder kun fra 1950.
 
-rm(u_pop)
-```
 
 # Spørsmål 12
 
+```{r pop}
+pop <- read_csv("ddf--gapminder--systema_globalis-master/countries-etc-datapoints/ddf--datapoints--population_total--by--geo--time.csv", 
+    col_types = cols(time = col_date(format = "%Y")))
+```
+
+```{r join_pop}
+g_c <- g_c %>%
+  left_join(pop, by = c("country" = "geo", "year" = "time"))
+rm(pop)
+```
+
+
+# Spørsmål 13
+
 ```{r gdp_pc}
-gdp_pc <- read_csv("Data/ddf--gapminder--systema_globalis-master/countries-etc-datapoints/ddf--datapoints--gdppercapita_us_inflation_adjusted--by--geo--time.csv", 
+gdp_pc <- read_csv("ddf--gapminder--systema_globalis-master/countries-etc-datapoints/ddf--datapoints--gdppercapita_us_inflation_adjusted--by--geo--time.csv", 
     col_types = cols(time = col_date(format = "%Y")))
 ```
 
 ```{r join_gdp_pc}
 g_c <- g_c %>%
   left_join(gdp_pc, by = c("country" = "geo", "year" = "time"))
-
 rm(gdp_pc)
 ```
 
+```{r}
+g_c = g_c %>% 
+  rename("lifeExp" = "life_expectancy_years",
+         "pop" = "population_total",
+         "gdpPercap" = "gdppercapita_us_inflation_adjusted")
+```
 
 ```{r names_g_c}
 names(g_c)
 ```
 
-# Spørsmål 13
-
-```{r rename}
-g_c <- g_c %>%
-  rename("lifeExp" = "life_expectancy_years") %>%
-  rename("pop" = "population_total") %>%
-  rename("gdpPercap" = "gdppercapita_us_inflation_adjusted")
-```
-
 Her har vi gitt nytt navn til 3 variabler, slik at de har samme navn som i *gapminder*-datasettet.
 
-```{r my_gapminder}
-t1 <- paste(seq(1962, 2017, by = 5), "01-01", sep = "-") %>% parse_date(format = "%Y-%m-%d")
-
-my_gapminder <- g_c %>%
-  filter(year %in% t1) %>%
-  select(name, continent, year, lifeExp, pop, gdpPercap) %>%
-  rename("country" = "name")
-
-dim(my_gapminder)
-```
 
 # Spørsmål 14
+
+```{r}
+t1 <- paste(c(seq(1800, 2015, by = 5), 2019), "01-01", sep = "-") %>%
+  parse_date(format = "%Y-%m-%d")
+
+g_c_5 <- g_c %>%
+  filter(year %in% t1) %>%
+  select(country, name, continent, year, lifeExp, pop, gdpPercap)
+dim(g_c_5)
+```
+
+```{r}
+g_c_gdpprc <- g_c_5 %>% 
+  group_by(gdpPercap) %>% 
+  summarise(min_year = min(year))
+table(g_c_gdpprc$min_year)
+```
+
+
+
+# Spørsmål 15
 
 ```{r country_1962}
 my_gapminder_1962 <- my_gapminder %>%
@@ -241,12 +262,8 @@ group_by(continent) %>%
 count() %>%
 kable()
 ```
-<<<<<<< HEAD
-=======
-# spørsmål 5
 
-=======
->>>>>>> 4af70f6e055b1c7b4cc005efdf6ae8bf2de94073
+
 
 
 
