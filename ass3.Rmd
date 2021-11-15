@@ -19,6 +19,7 @@ library(tinytex)
 options(scipen = 333)
 ```
 
+
 # Spørsmål 1
 
 *ddf--concepts.csv* filen er en tekstfil uten verdier. Innholdet er
@@ -27,18 +28,14 @@ populasjonsforhold, dødsårsaker, sykdommer (HIV, tuberkulose),
 arbeidsledighet og yrkesaktive, aldersgrupper. Det er også beskrevet de
 respektive landenes mikro/makroøkonimiske forhold som BNP osv.
 
-# Spørsmål 2
 
-*ddf--entities--geo--country.csv* inneholder kort beskrivelse av alle
-verdens land og stater. Dette inkluderer informasjon som beskriver
-hvorvidt landet er anerkjent som et land eller ikke. I tillegg ser vi
-blant annet også hvilken region/verdensdel det tilhører, levestandard,
-FN-tilhørighet og lokasjon
+# Spørsmål 2
 
 *ddf--entities--geo--country.csv* henviser til en kort beskrivelse av
 alle verdens land og stater. Samtidig som informasjon om landet er
 anerkjent som et land eller ikke. Beskrivelsen innholder også geografisk
 lokasjon verdensdel/region, FN-tilhørighet og antatt levestandard.
+
 
 # Spørsmål 3
 
@@ -108,31 +105,47 @@ g_c %>%
 # Spørsmål 7
 
 ```{r}
-library(readr)
-lifeExp <- read_csv("ddf--gapminder--systema_globalis-master/ddf--entities--geo--country/countries-etc-datapoints/ddf_datapoints_life_expectancy_at_birth_data_from_ihme_by_geo_time.csv",
+
+lifeExp <- read_csv("ddf--gapminder--systema_globalis-master/countries-etc-datapoints/ddf--datapoints--life_expectancy_years--by--geo--time.csv",
+
 col_types = cols(time = col_date(format = "%Y")))
 lifeExp <- lifeExp %>%
 rename(year = time)
+names(lifeExp)
 length(unique(lifeExp$geo))
 ```
 
 
 # Spørsmål 8
 
-Det er x antall land som informasjon om levetid.
+```{r}
+length(unique(lifeExp$geo))
+```
 
+Det er 195 land som informasjon om forventet levetid.
 
 
 # Spørsmål 9
 
 ```{r}
-g_c_min <- g_c %>%
-  group_by(country) %>%
-  summarise(min_year = min(year)) 
-
-g_c_min %>%
-  count(min_year = g_c_min$min_year)
+g_c <- g_c %>%
+select(country,
+       name,
+       iso3166_1_alpha3,
+       un_sdg_region,
+       world_4region,
+       continent,
+       world_6region,
+       ) %>%
+left_join(lifeExp, by = c("country" = "geo")) %>%
+filter(!(is.na(year) & is.na(life_expectancy_years))) %>%
+filter(year < "2020-01-01") 
 ```
+
+```{r}
+names(g_c)
+```
+
 
 # Spørsmål 10
 
