@@ -1,10 +1,12 @@
 ---
 title: "Gapminder; Assignment 3"
-subtitle: "MSB - 105"
 author: "Ole Alexander Bakkevik & Sindre M. Espedal"
+subtitle: MSB - 105
 output:
-  pdf_document: default
+  html_document:
+    df_print: paged
   html_notebook: default
+  pdf_document: default
 ---
 
 ```{r setup, message=FALSE, echo=FALSE}
@@ -17,20 +19,31 @@ library(tinytex)
 options(scipen = 333)
 ```
 
-
 # Spørsmål 1
 
-*ddf--concepts.csv* filen er en tekstfil uten verdier. Innholdet er beskrivelser av forskjellige variabler. Som for eksempel populasjonsforhold, dødsårsaker, sykdommer (HIV, tuberkulose), arbeidsledighet og yrkesaktive, aldersgrupper. Det er også beskrevet de respektive landenes mikro/makroøkonimiske forhold  som BNP osv.
-
+*ddf--concepts.csv* filen er en tekstfil uten verdier. Innholdet er
+beskrivelser av forskjellige variabler. Som for eksempel
+populasjonsforhold, dødsårsaker, sykdommer (HIV, tuberkulose),
+arbeidsledighet og yrkesaktive, aldersgrupper. Det er også beskrevet de
+respektive landenes mikro/makroøkonimiske forhold som BNP osv.
 
 # Spørsmål 2
 
-*ddf--entities--geo--country.csv*  henviser til en kort beskrivelse av alle verdens land og stater. Samtidig som  informasjon om landet er anerkjent som et land eller ikke. Beskrivelsen innholder også geografisk lokasjon verdensdel/region, FN-tilhørighet og antatt levestandard. 
+*ddf--entities--geo--country.csv* inneholder kort beskrivelse av alle
+verdens land og stater. Dette inkluderer informasjon som beskriver
+hvorvidt landet er anerkjent som et land eller ikke. I tillegg ser vi
+blant annet også hvilken region/verdensdel det tilhører, levestandard,
+FN-tilhørighet og lokasjon
+
+*ddf--entities--geo--country.csv* henviser til en kort beskrivelse av
+alle verdens land og stater. Samtidig som informasjon om landet er
+anerkjent som et land eller ikke. Beskrivelsen innholder også geografisk
+lokasjon verdensdel/region, FN-tilhørighet og antatt levestandard.
 
 # Spørsmål 3
 
-*ddf--entities--geo--un_sdg_region.csv* beskriver hvilke områder som er anerkjent som FN-regioner.
- 
+*ddf--entities--geo--un_sdg_region.csv* beskriver hvilke områder som er
+anerkjent som FN-regioner.
 
 ```{r}
 library(readr)
@@ -38,6 +51,26 @@ g_c <- read_csv("ddf--gapminder--systema_globalis-master/ddf--entities--geo--cou
 print(g_c)
 ```
 
+# Spørsmål 4
+
+Gapminder datasettet fra gapminder pakken inneholder 6 variabler. disse
+er:
+
+-   *country* -\> land, med 142 leveler.
+-   *continent* -\> kontinenter, med 5 leveler.
+-   *year* -\> år, varier fra 1952 til 2007 i trinn på 5 år.
+-   *lifeExp* -\> forventet leveår, målt i år.
+-   *pop* -\> befolkning
+-   *gdpPercap* -\> BNP per innbygger, US\$ inflasjon-justert
+
+```{r}
+library(readr)
+ddf_entities_geo_country <- read_csv("ddf--gapminder--systema_globalis-master/ddf--entities--geo--country.csv")
+View(ddf_entities_geo_country)
+```
+
+Vi ser ut i fra datasettet *ddf:entities_geo_country.csv* at Australia
+og New Zealand tilhører *east_asia_pacific*, altså Asia.
 
 # Spørsmål 4
 ```{r}
@@ -79,6 +112,7 @@ rename(year = time)
 length(unique(lifeExp$geo))
 ```
 
+<<<<<<< HEAD
 # Spørsmål 8
 
 Det er x antall land som informasjon om levetid.
@@ -190,6 +224,9 @@ group_by(continent) %>%
 count() %>%
 kable()
 ```
+=======
+# spørsmål 5
+>>>>>>> 3380caba55258a61d9a7e94e25a20bc585ccca6b
 
 
 ```{r venezuela_2017}
