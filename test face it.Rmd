@@ -1,0 +1,370 @@
+---
+title: "R Notebook"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+---
+title: "Gapminder"
+subtitle: "Assignment 3 i MSB105 Data Science - innleveringsfrist xx.11.20"
+author: 
+  - Katrine Hope
+  - Karl-Gunnar Severinsen
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+    toc: TRUE
+---
+
+```{r setup, message=FALSE, echo=FALSE}
+library(readr)
+library(tibble)
+library(prettydoc)
+library(knitr)
+library(tidyverse)
+library(dplyr)
+options(scipen = 999)
+```
+
+# Oppgave 1
+
+Filen som heter *ddf--concepts.csv* er en ren tekstfil uten dataverdier. Den inneholder kun beskrivelser av forskjellige variabler. Eksempelvis populasjonsforhold, som dødsårsaker, sykdomsforhold (HIV, tuberkulose, etc.), arbeidsforhold (ledighet, yrkesaktive), aldersgrupper). Videre er det forskjellige variabler som beskriver lands økonomiske forhold (BNP, landbruk, støtte, osv.)
+
+Kolonnene består av forskjellige beskrivelser, i form av kortere og lengre tekst/nøkkelord.
+
+Hver av de 596 variablene har korresponderende filer som inneholder data.
+
+# Oppgave 2
+
+Filen *ddf--entities--geo--country.csv* inneholder kort beskrivelse av alle verdens land og stater. Dette inkluderer informasjon som beskriver hvorvidt landet er anerkjent som et land eller ikke. I tillegg ser vi blant annet også hvilken region/verdensdel det tilhører, levestandard, FN-tilhørighet og lokasjon.
+
+# Oppgave 3
+
+Filen *ddf--entities--geo--un_sdg_region.csv* inneholder kort informasjon om hvilke områder som er definert som FN-regioner.
+
+# Oppgave 4
+
+```{r gc}
+library(readr)
+g_c <- read_csv("Data/ddf--gapminder--systema_globalis-master/ddf--entities--geo--country.csv")
+print(g_c)
+```
+
+```{r varspecs}
+spec(g_c)
+```
+
+```{r continents}
+g_c <- g_c %>%
+  mutate(continent = case_when(
+     world_4region == "asia" & un_sdg_region %in% c("un_australia_and_new_zealand", "un_oceania_exc_australia_and_new_zealand") ~ "Oceania",
+    world_4region ==  "asia" & !(un_sdg_region %in% c("un_australia_and_new_zealand", "un_oceania_exc_australia_and_new_zealand")) ~ "Asia",
+    world_4region == "africa" ~ "Africa",
+    world_4region == "americas" ~ "Americas",
+    world_4region ==  "europe" ~ "Europe")
+  ) %>%
+ filter(!is.na(iso3166_1_alpha3))
+```
+
+# Oppgave 5
+
+```{r numcountries}
+length(unique(g_c$country))
+```
+
+Etter at vi i forrige oppgave filtrerte datasettet til å ekskludere tidligere og ikke anerkjente land, kommer vi frem til at det i dag er 247 land i verden.
+
+# Oppgave 6
+
+```{r countriespercontinent, message=FALSE}
+g_c %>%
+  group_by(continent) %>%
+  summarise(countries = length(unique(country)))
+```
+
+Her ser vi en flott oversikt over antallet land per kontinent.
+
+# Oppgave 7
+
+Ved å opprette datasettet *lifeExp* kan vi se på hvor mange land som inneholder opplysninger om forventet levealder.
+
+```{r lifeexp}
+lifeExp <- read_csv("Data/ddf--gapminder--systema_globalis-master/countries-etc-datapoints/ddf--datapoints--life_expectancy_years--by--geo--time.csv",
+col_types = cols(time = col_date(format = "%Y")))
+lifeExp <- lifeExp %>%
+rename(year = time)
+length(unique(lifeExp$geo))
+```
+
+Vi kommer frem til at det er 189 land som har denne opplysningen.
+
+# Oppgave 8
+
+```{r join_lifeexp}
+g_c <- g_c %>%
+  select(country, name, iso3166_1_alpha3, main_religion_2008, un_sdg_region, world_4region, continent, world_6region) %>%
+  left_join(lifeExp, by = c("country" = "geo")) %>%
+  filter(!(is.na(year) & is.na(life_expectancy_years))) %>%
+  filter(year < "2020-01-01")
+
+rm(lifeExp)
+```
+
+# Oppgave 9
+
+```{r year_min, message=FALSE}
+g_c_min <- g_c %>%
+  group_by(country) %>%
+  summarise(min_year = min(year)) 
+
+g_c_min %>%
+  count(min_year = g_c_min$min_year)
+```
+
+Over har vi benyttet *count*-funksjonen til å telle opp antallet observasjoner rangert etter tidligste år. Vi finner to årstall, 1800 og 1970, med henholdsvis 186 og 3 observasjoner.
+
+Under får vi samme oversikten ved hjelp av *table*-funksjonen.
+
+```{r alt_year_min}
+table(g_c_min$min_year)
+```
+
+For å finne de 3 landene der observasjonene starter i 1970, går vi frem på følgende måte.
+
+```{r 1970}
+g_c_min %>%
+  filter(min_year == "1970-01-01")
+```
+
+Vi må nå flette inn informasjon fra *g_c* for å kunne sette navn på kodene ovenfor.
+
+```{r name_1970}
+g_c_min <- g_c_min %>%
+  left_join(g_c,
+            by = "country") %>%
+  filter(min_year == "1970-01-01")
+
+tibble(country = unique(g_c_min$name))
+
+rm(g_c_min)
+```
+
+Her kommer vi frem til at de tre landene som kun har observasjoner fra 1970 er; *Andorra*, *Dominica* og *Marshall Islands*.
+
+# Oppgave 10
+
+```{r pop}
+pop <- read_csv("Data/ddf--gapminder--systema_globalis-master/countries-etc-datapoints/ddf--datapoints--population_total--by--geo--time.csv", 
+    col_types = cols(time = col_date(format = "%Y")))
+```
+
+```{r join_pop}
+g_c <- g_c %>%
+  left_join(pop, by = c("country" = "geo", "year" = "time"))
+
+rm(pop)
+```
+
+# Oppgave 11
+
+```{r u_pop}
+u_pop <- read_csv("Data/ddf--gapminder--systema_globalis-master/countries-etc-datapoints/ddf--datapoints--urban_population--by--geo--time.csv", 
+    col_types = cols(time = col_date(format = "%Y")))
+```
+
+```{r join_u_pop}
+g_c <- g_c %>%
+  left_join(u_pop, by = c("country" = "geo", "year" = "time"))
+
+rm(u_pop)
+```
+
+# Oppgave 12
+
+```{r gdp_pc}
+gdp_pc <- read_csv("Data/ddf--gapminder--systema_globalis-master/countries-etc-datapoints/ddf--datapoints--gdppercapita_us_inflation_adjusted--by--geo--time.csv", 
+    col_types = cols(time = col_date(format = "%Y")))
+```
+
+```{r join_gdp_pc}
+g_c <- g_c %>%
+  left_join(gdp_pc, by = c("country" = "geo", "year" = "time"))
+
+rm(gdp_pc)
+```
+
+I oppgave 10, 11 og 12 har vi koblet sammen 3 datasett inn i *g_c*-datasettet for å slå sammen informasjon om total populasjon, urban populasjon og GDP som vi skal bruke videre.
+
+Under har vi en oversikt over de nye variablene i datasettet *g_c*.
+
+```{r names_g_c}
+names(g_c)
+```
+
+# Oppgave 13
+
+```{r rename}
+g_c <- g_c %>%
+  rename("lifeExp" = "life_expectancy_years") %>%
+  rename("pop" = "population_total") %>%
+  rename("gdpPercap" = "gdppercapita_us_inflation_adjusted")
+```
+
+Her har vi gitt nytt navn til 3 variabler, slik at de har samme navn som i *gapminder*-datasettet.
+
+```{r my_gapminder}
+t1 <- paste(seq(1962, 2017, by = 5), "01-01", sep = "-") %>% parse_date(format = "%Y-%m-%d")
+
+my_gapminder <- g_c %>%
+  filter(year %in% t1) %>%
+  select(name, continent, year, lifeExp, pop, gdpPercap) %>%
+  rename("country" = "name")
+
+dim(my_gapminder)
+```
+
+Etter å ha trimmet datasettet ved å filtrere årstallene til å kun inneholde hvert 5. år i perioden 1962 til 2017, kommer vi nå frem til at vi har 2262 observasjoner fordelt på 6 variabler.
+
+# Oppgave 14
+
+```{r country_1962}
+my_gapminder_1962 <- my_gapminder %>%
+  group_by(country) %>% 
+  filter(!is.na(gdpPercap)) %>%
+  filter(year == "1962-01-01")
+
+length(unique(my_gapminder_1962$country))
+
+```
+
+Vi ser her at det kun er 90 land som har data for *gdpPercap* i året 1962.
+
+Under viser vi fordelingen av disse 90 landene, fordelt per kontinent.
+
+```{r continent_1962}
+my_gapminder_1962 %>%
+distinct(country, continent) %>%
+group_by(continent) %>%
+count() %>%
+kable()
+```
+
+> I oppgaven får vi opplyst at Venezuela mangler data for *gdpPercap* i året 2017. 
+> Vi er usikre på fremgangsmåten får å finne dette, men under har vi likevel klart å få vist dette i samme tabell som i oppgaveteksten.
+
+```{r venezuela_2017}
+my_gapminder_venezuela <- my_gapminder %>%
+  group_by(country) %>% 
+  filter(is.na(gdpPercap)) %>%
+  filter(country == "Venezuela")
+my_gapminder_venezuela
+
+rm(my_gapminder_venezuela)
+```
+
+# Oppgave 15
+
+```{r ggplot_1962}
+my_gapminder_1962 %>% 
+ggplot(my_gapminder_1962 , 
+             mapping = aes(x = gdpPercap, 
+                           y = lifeExp, 
+                           size = pop,
+                           colour = continent)) +
+  geom_point() +
+  ggtitle("1962-01-01") +
+  theme(legend.position = "bottom")
+  
+```
+
+```{r ggplot_1987}
+my_gapminder_1987 <- my_gapminder %>%
+  group_by(country) %>% 
+  filter(!is.na(gdpPercap)) %>%
+  filter(year == "1987-01-01")
+
+length(unique(my_gapminder_1987$country))
+
+my_gapminder_1987 %>% 
+ggplot(my_gapminder_1987 , 
+             mapping = aes(x = gdpPercap, 
+                           y = lifeExp, 
+                           size = pop,
+                           colour = continent)) +
+  geom_point() +
+  ggtitle("1987-01-01") +
+  theme(legend.position = "bottom")
+```
+
+```{r ggplot_2017}
+my_gapminder_2017 <- my_gapminder %>%
+  group_by(country) %>% 
+  filter(!is.na(gdpPercap)) %>%
+  filter(year == "2017-01-01")
+
+length(unique(my_gapminder_2017$country))
+
+my_gapminder_2017 %>% 
+ggplot(my_gapminder_2017 , 
+             mapping = aes(x = gdpPercap, 
+                           y = lifeExp, 
+                           size = pop,
+                           colour = continent)) +
+  geom_point() +
+  ggtitle("2017-01-01") +
+  theme(legend.position = "bottom")
+```
+
+# Oppgave 16
+
+```{r log_1962}
+my_gapminder_1962 %>% 
+ggplot(my_gapminder_1962 , 
+             mapping = aes(x = log(gdpPercap), 
+                           y = lifeExp, 
+                           size = pop,
+                           colour = continent)) +
+  geom_point() +
+  coord_cartesian(xlim = c(5, 12), ylim = c(30, 100)) +
+  ggtitle("1962-01-01") +
+  theme(legend.position = "bottom")
+```
+
+```{r log_1987}
+my_gapminder_1987 %>% 
+ggplot(my_gapminder_1987 , 
+             mapping = aes(x = log(gdpPercap), 
+                           y = lifeExp, 
+                           size = pop,
+                           colour = continent)) +
+  geom_point() +
+  coord_cartesian(xlim = c(5, 12), ylim = c(30, 100)) +
+  ggtitle("1987-01-01") +
+  theme(legend.position = "bottom")
+```
+
+```{r log_2017}
+my_gapminder_2017 %>% 
+ggplot(my_gapminder_2017 , 
+             mapping = aes(x = log(gdpPercap), 
+                           y = lifeExp, 
+                           size = pop,
+                           colour = continent)) +
+  geom_point() +
+  coord_cartesian(xlim = c(5, 12), ylim = c(30, 100)) +
+  ggtitle("2017-01-01") +
+  theme(legend.position = "bottom")
+```
+
+# Oppgave 17
+
+I oppgave 15 og 16 kan vi se at forventet levealder har økt jevnt siden 1962, spesielt kan vi se at Asia har hatt en signifikant økning i levealder. 
+Særlig i oppgave 15 kan vi se utviklingen i Bruttonasjonalprodukt (BNP/GDP), i tillegg ser vi påvirkningen av økt antall land med observerbar data for de 3 utvalgte årstallene 1962, 1987 og 2017.
+Vi ser også utviklingen i folketall.
+
+Europa virker å generelt ha både høyest BNP og levealder i perioden 1962 til 2017.
+Vi kan også se at Kina og India (markert med de to største grønne punktene) har hatt en markant økning i både levealder og BNP.
+
+Vi kan i både oppgave 15 og 16 se en viss sammenheng mellom et lands BNP og forventet levealder i landet.
