@@ -108,6 +108,7 @@ g_c %>%
 # Spørsmål 7
 
 ```{r}
+library(readr)
 lifeExp <- read_csv("ddf--gapminder--systema_globalis-master/ddf--entities--geo--country/countries-etc-datapoints/ddf_datapoints_life_expectancy_at_birth_data_from_ihme_by_geo_time.csv",
 col_types = cols(time = col_date(format = "%Y")))
 lifeExp <- lifeExp %>%
