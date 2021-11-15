@@ -1,10 +1,12 @@
 ---
 title: "Gapminder; Assignment 3"
-subtitle: "MSB - 105"
 author: "Ole Alexander Bakkevik & Sindre M. Espedal"
+subtitle: MSB - 105
 output:
-  pdf_document: default
+  html_document:
+    df_print: paged
   html_notebook: default
+  pdf_document: default
 ---
 
 ```{r setup, message=FALSE, echo=FALSE}
@@ -61,7 +63,14 @@ er:
 -   *pop* -\> befolkning
 -   *gdpPercap* -\> BNP per innbygger, US\$ inflasjon-justert
 
+```{r}
+library(readr)
+ddf_entities_geo_country <- read_csv("ddf--gapminder--systema_globalis-master/ddf--entities--geo--country.csv")
+View(ddf_entities_geo_country)
+```
+
+Vi ser ut i fra datasettet *ddf:entities_geo_country.csv* at Australia
+og New Zealand tilhører *east_asia_pacific*, altså Asia.
+
 
 # spørsmål 5
-
-
