@@ -65,14 +65,14 @@ er:
 
 ```{r}
 library(readr)
-ddf_entities_geo_country <- read_csv("ddf--gapminder--systema_globalis-master/ddf--entities--geo--country.csv")
-View(ddf_entities_geo_country)
+oppg_4 <- ddf_entities_geo_country <- read_csv("ddf--gapminder--systema_globalis-master/ddf--entities--geo--country.csv")
+  print(oppg_4)
 ```
 
 Vi ser ut i fra datasettet *ddf:entities_geo_country.csv* at Australia
 og New Zealand tilhører *east_asia_pacific*, altså Asia.
 
-# Spørsmål 4
+# Spørsmål 5
 ```{r}
 g_c <- g_c %>%
   mutate(continent = case_when(
@@ -87,13 +87,16 @@ g_c <- g_c %>%
 
 
 
-# Spørsmål 5
+# Spørsmål 6
+## a)
 
 ```{r}
 length(unique(g_c$country))
 ```
+Nå er det 247 land. 
 
 # Spørsmål 6
+## b)
 
 ```{r}
 g_c %>%
@@ -101,8 +104,8 @@ g_c %>%
   summarise(countries = length(unique(country)))
 ```
 
-# Spørsmål 7
 
+# Spørsmål 7
 
 ```{r}
 lifeExp <- read_csv("ddf--gapminder--systema_globalis-master/ddf--entities--geo--country/countries-etc-datapoints/ddf_datapoints_life_expectancy_at_birth_data_from_ihme_by_geo_time.csv",
@@ -112,7 +115,7 @@ rename(year = time)
 length(unique(lifeExp$geo))
 ```
 
-<<<<<<< HEAD
+
 # Spørsmål 8
 
 Det er x antall land som informasjon om levetid.
@@ -224,16 +227,6 @@ group_by(continent) %>%
 count() %>%
 kable()
 ```
-=======
-# spørsmål 5
->>>>>>> 3380caba55258a61d9a7e94e25a20bc585ccca6b
 
 
-```{r venezuela_2017}
-my_gapminder_venezuela <- my_gapminder %>%
-  group_by(country) %>% 
-  filter(is.na(gdpPercap)) %>%
-  filter(country == "Venezuela")
-my_gapminder_venezuela
 
-rm(my_gapminder_venezuela)
