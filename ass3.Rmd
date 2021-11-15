@@ -181,7 +181,7 @@ length(unique(my_gapminder_1962$country))
 
 Vi ser her at det kun er 90 land som har data for *gdpPercap* i året 1962.
 
-Under viser vi fordelingen av disse 90 landene, fordelt per kontinent.
+Under viser vi fordelingen av disse 90 landene, fordelt per kontinent..
 
 ```{r continent_1962}
 my_gapminder_1962 %>%
