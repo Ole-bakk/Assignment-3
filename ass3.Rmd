@@ -226,7 +226,7 @@ kable()
 ```
 =======
 # spørsmål 5
->>>>>>> 3380caba55258a61d9a7e94e25a20bc585ccca6b
+
 
 
 ```{r venezuela_2017}
