@@ -1,0 +1,16 @@
+---
+title: "ag_comments"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+-   Dokumentet er reproduserbart. Flott!
+-   Har endret slik at plotene er for hvert år og ikke dette året og de foregående. Gjør at endringen over tid kommer tydligere frem.
+-   Har satt xlim og ylim til samme verdier for samtlige plot. Dette gjør det også letter å se endringene over tid.
+-   For 1960 ikke log, har jeg også vist bruk av funksjonene `xlim()`og `ylim()`. Disse er kansje lettere å huske enn `coord_cartesian()`.
+-   Se spm. 3, 4, 12 og 13 for et triks som gjør at man unngår at lange filnavn går ut i margen eller enda lengre.
+-   Spm. har jeg tatt linjeskift for hvert argument til `c()` funksjonen slik at vi holder oss innenfor margene.
+-   Koden er klar og fint formatert. Eneste er at jeg vil anbefale en blank linje etter en pipe. Ellers kan det være vanskelig å se hvor pipen slutter og neste kommando starter.
+-   En svært god besvarelse.
