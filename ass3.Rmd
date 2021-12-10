@@ -3,10 +3,10 @@ title: "Gapminder; Assignment 3"
 author: "Ole Alexander Bakkevik & Sindre M. Espedal"
 subtitle: MSB - 105
 output:
+  pdf_document: default
+  html_notebook: default
   html_document:
     df_print: paged
-  html_notebook: default
-  pdf_document: default
 ---
 
 ```{r setup, message=FALSE, echo=FALSE}
@@ -38,7 +38,13 @@ Beskrivelsen innholder også geografisk lokasjon verdensdel/region, FN-tilhørig
 
 ```{r}
 library(readr)
-g_c <- read_csv("ddf--gapminder--systema_globalis-master/ddf--entities--geo--country.csv")
+g_c <- read_csv(
+  paste0(
+    "ddf--gapminder--systema_globalis-master/",
+    "ddf--entities--geo--country.csv"
+    )
+)
+
 print(g_c)
 ```
 
@@ -56,7 +62,15 @@ disse er:
 
 ```{r}
 library(readr)
-oppg_4 <- ddf_entities_geo_country <- read_csv("ddf--gapminder--systema_globalis-master/ddf--entities--geo--country.csv")
+# Denne dobbel tilordningen trenger dere vel ikke
+#oppg_4 <- ddf_entities_geo_country <- read_csv(
+#"ddf--gapminder--systema_globalis-master/ddf--entities--geo--country.csv")
+oppg_4 <- read_csv(
+  paste0(
+    "ddf--gapminder--systema_globalis-master/",
+    "ddf--entities--geo--country.csv"
+    )
+  )
 print(oppg_4)
   
 ```
@@ -68,8 +82,15 @@ Vi ser ut i fra datasettet *ddf:entities_geo_country.csv* at Australia og New Ze
 ```{r}
 g_c <- g_c %>%
   mutate(continent = case_when(
-     world_4region == "asia" & un_sdg_region %in% c("un_australia_and_new_zealand", "un_oceania_exc_australia_and_new_zealand") ~ "Oceania",
-    world_4region ==  "asia" & !(un_sdg_region %in% c("un_australia_and_new_zealand", "un_oceania_exc_australia_and_new_zealand")) ~ "Asia",
+     world_4region == "asia" & un_sdg_region %in% c(
+       "un_australia_and_new_zealand", 
+       "un_oceania_exc_australia_and_new_zealand"
+       ) ~ "Oceania",
+    world_4region ==  "asia" & !(un_sdg_region %in% c(
+      "un_australia_and_new_zealand", 
+      "un_oceania_exc_australia_and_new_zealand"
+      )
+      ) ~ "Asia",
     world_4region == "africa" ~ "Africa",
     world_4region == "americas" ~ "Americas",
     world_4region ==  "europe" ~ "Europe")
@@ -145,6 +166,7 @@ names(g_c)
 g_c_min <- g_c %>% 
   group_by(country) %>% 
   summarise(min_year = min(year))
+
 table(g_c_min$min_year)
 ```
 
@@ -157,7 +179,9 @@ g_c_min <- g_c_min %>%
   left_join(g_c,
             by = "country") %>%
   filter(min_year == "1950-01-01")
+
 tibble(country = unique(g_c_min$name))
+
 rm(g_c_min)
 ```
 
@@ -166,8 +190,14 @@ Dette er de 9 landene som har data om forventet levealder kun fra 1950.
 # Spørsmål 12
 
 ```{r pop}
-pop <- read_csv("ddf--gapminder--systema_globalis-master/countries-etc-datapoints/ddf--datapoints--population_total--by--geo--time.csv", 
-    col_types = cols(time = col_date(format = "%Y")))
+pop <- read_csv(
+  # paste0() er bare paste() med sep=""
+  paste0("ddf--gapminder--systema_globalis-master/",
+         "countries-etc-datapoints/",
+         "ddf--datapoints--population_total--by--geo--time.csv"
+  ),
+    col_types = cols(time = col_date(format = "%Y"))
+  )
 ```
 
 ```{r join_pop}
@@ -179,8 +209,13 @@ rm(pop)
 # Spørsmål 13
 
 ```{r gdp_pc}
-gdp_pc <- read_csv("ddf--gapminder--systema_globalis-master/countries-etc-datapoints/ddf--datapoints--gdppercapita_us_inflation_adjusted--by--geo--time.csv", 
-    col_types = cols(time = col_date(format = "%Y")))
+gdp_pc <- read_csv(
+  paste0("ddf--gapminder--systema_globalis-master/",
+         "countries-etc-datapoints/",
+         "ddf--datapoints--gdppercapita_us_inflation_adjusted--by--geo--time.csv"
+         ), 
+    col_types = cols(time = col_date(format = "%Y"))
+  )
 ```
 
 ```{r join_gdp_pc}
@@ -211,6 +246,7 @@ t1 <- paste(c(seq(1800, 2015, by = 5), 2019), "01-01", sep = "-") %>%
 g_c_5 <- g_c %>%
   filter(year %in% t1) %>%
   select(country, name, continent, year, lifeExp, pop, gdpPercap)
+
 dim(g_c_5)
 ```
 
@@ -218,6 +254,7 @@ dim(g_c_5)
 g_c_gdpprc <- g_c_5 %>% 
   group_by(gdpPercap) %>% 
   summarise(min_year = min(year))
+
 table(g_c_gdpprc$min_year)
 ```
 
@@ -229,6 +266,7 @@ g_c <- g_c %>%
   group_by(name) %>%
   summarise(nr = n()) %>%
   arrange((name))
+
 print(g_c)
 ```
 
@@ -301,14 +339,19 @@ paste("Number of NAs in g_c_1960 is", dim(num_NA)[1], sep = " ")
 
 ```{r 1960}
 g_c_1960 %>%
-filter(year <= "1960-01-01") %>%
+filter(year == "1960-01-01") %>%
   ggplot(mapping = aes(x = gdpPercap,
                        y = lifeExp,
                        size = pop, 
                        colour = continent)) +
   geom_point() +
-  coord_cartesian(ylim = c(20, 90), 
-                  xlim = c(0,30000)) +
+  # coord_cartesian() virker helt fint, men funksjonene xlim og ylim er kanskje lettere
+  # å huske. Endrer xlim til 0, 110000 slik at vi kan ha samme aksjer på alle figurene
+  # Like akser gjør det enklere å sammenligne over tid
+  ylim(20,90) +
+  xlim(0,110000) +
+  # coord_cartesian(ylim = c(20, 90), 
+  #                 xlim = c(0,30000)) +
   ggtitle("1960") +
   theme(legend.position = "bottom")
 ```
@@ -317,14 +360,14 @@ i 1960 er det mindre land som er registrert og vi ser at Europa dominerer både 
 
 ```{r 1980}
 g_c_1960 %>%
-filter(year <= "1980-01-01") %>%
+filter(year == "1980-01-01") %>%
   ggplot(mapping = aes(x = gdpPercap,
                        y = lifeExp,
                        size = pop, 
                        colour = continent)) +
   geom_point() +
   coord_cartesian(ylim = c(20, 90), 
-                  xlim = c(0,50000)) +
+                  xlim = c(0,110000)) +
   ggtitle("1980") +
   theme(legend.position = "bottom")
 ```
@@ -335,14 +378,14 @@ Vi ser landene i Asia og Afrika henger bak med både forventet levealder og BNP 
 
 ```{r 2000}
 g_c_1960 %>%
-filter(year <= "2000-01-01") %>%
+filter(year == "2000-01-01") %>%
   ggplot(mapping = aes(x = gdpPercap,
                        y = lifeExp,
                        size = pop, 
                        colour = continent)) +
   geom_point() +
   coord_cartesian(ylim = c(20, 90), 
-                  xlim = c(0,95000)) +
+                  xlim = c(0,110000)) +
   ggtitle("2000") +
   theme(legend.position = "bottom")
 ```
@@ -352,7 +395,7 @@ Vi ser også at BNP per innbygger har økt for de fleste land.
 
 ```{r 2019}
 g_c_1960 %>%
-filter(year <= "2019-01-01") %>%
+filter(year == "2019-01-01") %>%
   ggplot(mapping = aes(x = gdpPercap,
                        y = lifeExp,
                        size = pop, 
@@ -371,35 +414,35 @@ Forventet levealder har ikke økt noe særlig fra 2000.
 
 ```{r 1960 log}
 g_c_1960 %>%
-filter(year <= "1960-01-01") %>%
+filter(year == "1960-01-01") %>%
   ggplot(mapping = aes(x = log(gdpPercap),
                        y = lifeExp,
                        size = pop, 
                        colour = continent)) +
   geom_point() +
   coord_cartesian(ylim = c(20, 90), 
-                  xlim = c(5,11)) +
+                  xlim = c(5,12)) +
   ggtitle("1960") +
   theme(legend.position = "bottom")
 ```
 
 ```{r 1980 log}
 g_c_1960 %>%
-filter(year <= "1980-01-01") %>%
+filter(year == "1980-01-01") %>%
   ggplot(mapping = aes(x = log(gdpPercap),
                        y = lifeExp,
                        size = pop, 
                        colour = continent)) +
   geom_point() +
   coord_cartesian(ylim = c(20, 90), 
-                  xlim = c(5,11)) +
+                  xlim = c(5,12)) +
   ggtitle("1980") +
   theme(legend.position = "bottom")
 ```
 
 ```{r 2000 log}
 g_c_1960 %>%
-filter(year <= "2000-01-01") %>%
+filter(year == "2000-01-01") %>%
   ggplot(mapping = aes(x = log(gdpPercap),
                        y = lifeExp,
                        size = pop, 
@@ -413,7 +456,7 @@ filter(year <= "2000-01-01") %>%
 
 ```{r 2019 log}
 g_c_1960 %>%
-filter(year <= "2019-01-01") %>%
+filter(year == "2019-01-01") %>%
   ggplot(mapping = aes(x = log(gdpPercap),
                        y = lifeExp,
                        size = pop, 
@@ -430,7 +473,7 @@ filter(year <= "2019-01-01") %>%
 Fra 1960 til 1980 er det hentet inn masse mer data på landene i verden.
 Fra 1980 til 2000 øker forventet levealder spesielt for land med lav BNP per innbygger.
 Ved hjelp av **log(gdpPercap)** får vi en mye mindre spredning i BNP per innbygger enn kun ved **gdpPercap**.
-Forsatt dominerer land i Asia og Afrika med lavest BNP per innbygger, men med hjelp av log-funksjonen så er avvikket fra de europeeiske landene lengst til høyre mindre.
+Fortsatt dominerer land i Asia og Afrika med lavest BNP per innbygger, men med hjelp av log-funksjonen så er avvikket fra de europeeiske landene lengst til høyre mindre.
 
 Oppsummert kan vi si at alle landene beveger seg oppover og til høyre i diagrammet, som vil si at BNP per innbygger øker og leveralder øker for samtlige land.
 
@@ -439,5 +482,12 @@ Oppsummert kan vi si at alle landene beveger seg oppover og til høyre i diagram
 ```{r}
 write.table(g_c_5, file="my_gapminder.csv", sep = ",")
 
-write.table(g_c_1960, file="my_gapminder_red.csv", sep = ",")
+#write.table(g_c_1960, file="my_gapminder_red.csv", sep = ",")
+# Vi bør bruke tidyverse funksjonen. Ofte kjappere og kanskje mer robust enn den klassiske
+write_csv(g_c_1960, file="my_gapminder_red.csv")
 ```
+
+```{r, echo = FALSE}
+# siste
+```
+
